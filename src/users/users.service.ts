@@ -37,5 +37,9 @@ export class UsersService {
         return await this.userRepository.save(user);
     }
 
+    async delete(id: number): Promise<Users> {
+        const user = await this.findOne(id);
+        return this.userRepository.remove(user);
+    }
 
 }
