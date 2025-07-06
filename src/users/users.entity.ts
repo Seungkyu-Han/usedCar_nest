@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, Unique} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn, Unique, AfterInsert} from "typeorm";
 
 @Entity('users')
 @Unique(['email'])
@@ -15,4 +15,9 @@ export class Users{
 
     @Column()
     password: string;
+
+    @AfterInsert()
+    logInsert(){
+        console.log(`user inserted id: ${this.id}`);
+    }
 }
