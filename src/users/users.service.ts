@@ -31,5 +31,11 @@ export class UsersService {
         return await this.userRepository.find({where: {name}});
     }
 
+    async update(id: number, userAttrs: Partial<Users>): Promise<Users> {
+        const user = await this.findOne(id);
+        Object.assign(user, userAttrs);
+        return await this.userRepository.save(user);
+    }
+
 
 }
