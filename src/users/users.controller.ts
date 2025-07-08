@@ -14,11 +14,13 @@ import {UpdateUserDto} from "./dto/update-user.dto";
 import {Users} from "./users.entity";
 import {Serialize} from "../interceptors/serialize.interceptor";
 import {UserDto} from "./dto/user.dto";
+import {AuthService} from "./auth.service";
 
 @Controller('users')
 export class UsersController {
 
-    constructor(private readonly usersService: UsersService){}
+    constructor(private readonly usersService: UsersService,
+                private readonly authService: AuthService){}
 
     @Post()
     create(@Body() createUserDto: CreateUserDto): Promise<Users> {
