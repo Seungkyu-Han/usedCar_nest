@@ -24,7 +24,7 @@ export class UsersController {
 
     @Post()
     create(@Body() createUserDto: CreateUserDto): Promise<Users> {
-        return this.usersService.create(createUserDto);
+        return this.authService.signUp(createUserDto);
     }
 
     @Get("/:id")
