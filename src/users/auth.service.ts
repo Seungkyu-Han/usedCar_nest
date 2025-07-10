@@ -1,8 +1,10 @@
-import {ConflictException, Injectable} from "@nestjs/common";
+import {ConflictException, Injectable, UnauthorizedException} from "@nestjs/common";
 import {UsersService} from "./users.service";
 import {CreateUserDto} from "./dto/create-user.dto";
 import {randomBytes, scrypt as _scrypt} from 'crypto';
 import {promisify} from 'util';
+import {LoginUserDto} from "./dto/login-user.dto";
+import {Users} from "./users.entity";
 
 const scrypt = promisify(_scrypt);
 
@@ -39,7 +41,21 @@ export class AuthService {
         return await this.usersService.create({email, password, name});
     }
 
-    signIn(){
+    async signIn(loginUserDto: LoginUserDto): Promise<Users>{
+        const {email, password} = loginUserDto;
 
+        const user = await this.usersService.findByEmail(email);
+
+        if(!user)
+            throw new UnauthorizedException();
+
+        const [salt, hashedPassword] = user.password.split('.');
+
+        const hashed = (await scrypt(password, salt, 32)) as Buffer;
+
+        if(hashedPassword != hashed.toString('hex'))
+            throw new UnauthorizedException();
+
+        return user;
     }
 }

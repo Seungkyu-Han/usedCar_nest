@@ -15,8 +15,10 @@ import {Users} from "./users.entity";
 import {Serialize} from "../interceptors/serialize.interceptor";
 import {UserDto} from "./dto/user.dto";
 import {AuthService} from "./auth.service";
+import {LoginUserDto} from "./dto/login-user.dto";
 
 @Controller('users')
+@Serialize(UserDto)
 export class UsersController {
 
     constructor(private readonly usersService: UsersService,
@@ -27,8 +29,12 @@ export class UsersController {
         return this.authService.signUp(createUserDto);
     }
 
+    @Post("/signIn")
+    signIn(@Body() loginUserDto: LoginUserDto): Promise<Users>{
+        return this.authService.signIn(loginUserDto)
+    }
+
     @Get("/:id")
-    @Serialize(UserDto)
     findUser(@Param('id') id: number): Promise<Users> {
         return this.usersService.findOne(id)
     }
