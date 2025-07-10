@@ -7,6 +7,7 @@ import {
     Patch,
     Post,
     Query,
+    Session
 } from '@nestjs/common';
 import {UsersService} from "./users.service";
 import {CreateUserDto} from "./dto/create-user.dto";
@@ -23,6 +24,16 @@ export class UsersController {
 
     constructor(private readonly usersService: UsersService,
                 private readonly authService: AuthService){}
+
+    @Get("/test/:name")
+    testWriteSession(@Param('name') name:string, @Session() session: any){
+        session.name = name;
+    }
+
+    @Get("/test")
+    testReadSession(@Session() session: any){
+        return session.name;
+    }
 
     @Post()
     create(@Body() createUserDto: CreateUserDto): Promise<Users> {
