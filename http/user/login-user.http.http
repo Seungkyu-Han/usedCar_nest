@@ -5,3 +5,9 @@ Content-Type: application/json
   "email": "test@test.com",
   "password": "test"
 }
+
+###
+GET http://localhost:3000/users/check
+
+###
+POST http://localhost:3000/users/signOut

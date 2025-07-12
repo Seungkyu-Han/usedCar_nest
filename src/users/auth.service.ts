@@ -32,10 +32,8 @@ export class AuthService {
         const hash = (await scrypt(password, salt, 32)) as Buffer;
 
         //암호화된 값(16진수로 변환)과 SALT를 결합
-        const result = salt + '.' + hash.toString('hex');
-
         //사용자 정보 저장
-        password = result;
+        password = salt + '.' + hash.toString('hex');
 
         //사용자에게 응답
         return await this.usersService.create({email, password, name});

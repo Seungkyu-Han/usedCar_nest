@@ -25,24 +25,29 @@ export class UsersController {
     constructor(private readonly usersService: UsersService,
                 private readonly authService: AuthService){}
 
-    @Get("/test/:name")
-    testWriteSession(@Param('name') name:string, @Session() session: any){
-        session.name = name;
-    }
-
-    @Get("/test")
-    testReadSession(@Session() session: any){
-        return session.name;
-    }
-
     @Post()
-    create(@Body() createUserDto: CreateUserDto): Promise<Users> {
+    async create(@Body() createUserDto: CreateUserDto): Promise<Users> {
         return this.authService.signUp(createUserDto);
     }
 
     @Post("/signIn")
-    signIn(@Body() loginUserDto: LoginUserDto): Promise<Users>{
-        return this.authService.signIn(loginUserDto)
+    async signIn(@Body() loginUserDto: LoginUserDto, @Session() session: any): Promise<Users>{
+        const user = await this.authService.signIn(loginUserDto)
+
+        session.userId = user.id;
+
+        return user;
+    }
+
+    @Get("/check")
+    async checkLogin(@Session() session: any): Promise<string>{
+        console.log(`userId: ${session.userId}`);
+        return ""
+    }
+
+    @Post("/signOut")
+    async signOut(@Session() session: any): Promise<void>{
+        session.userId = null;
     }
 
     @Get("/:id")
