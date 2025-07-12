@@ -7,7 +7,7 @@ import {
     Patch,
     Post,
     Query,
-    Session
+    Session, UseGuards, UseInterceptors
 } from '@nestjs/common';
 import {UsersService} from "./users.service";
 import {CreateUserDto} from "./dto/create-user.dto";
@@ -17,6 +17,8 @@ import {Serialize} from "../interceptors/serialize.interceptor";
 import {UserDto} from "./dto/user.dto";
 import {AuthService} from "./auth.service";
 import {LoginUserDto} from "./dto/login-user.dto";
+import {Authentication} from "./decorator/Authentication";
+import {AuthGuard} from "../guards/auth.guards";
 
 @Controller('users')
 @Serialize(UserDto)
@@ -40,9 +42,12 @@ export class UsersController {
     }
 
     @Get("/check")
-    async checkLogin(@Session() session: any): Promise<string>{
-        console.log(`userId: ${session.userId}`);
-        return ""
+    @UseGuards(AuthGuard)
+    async checkLogin(@Authentication() authentication: Users): Promise<Users>{
+
+        console.log(`i am authentication: ${authentication}`);
+
+        return authentication
     }
 
     @Post("/signOut")
