@@ -1,5 +1,6 @@
-import {Column, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
+@Entity()
 export class Report{
     @PrimaryGeneratedColumn()
     id: number;
@@ -17,7 +18,7 @@ export class Report{
     year: number;
 
     @Column()
-    Latitude: number;
+    latitude: number;
 
     @Column()
     longitude: number;
